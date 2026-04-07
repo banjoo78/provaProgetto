@@ -8,21 +8,23 @@ SQLite — single file at `packages/backend/data/dev.db`. Backed by Prisma.
 
 ## Target schema (to be implemented during MVP)
 
-### Trip
+### Trip — **LOCKED for S001** (see [design/S001-trip-design.md](design/S001-trip-design.md))
 | Column | Type | Notes |
 |---|---|---|
-| id | Int / autoincrement | PK |
-| city | String | Required |
-| country | String? | Optional |
-| startDate | DateTime | Required |
-| endDate | DateTime | Required, ≥ startDate |
-| client | String? | Free-form (e.g. "Acme SpA") |
-| purpose | String? | Free-form |
-| notes | String? | Markdown allowed |
-| createdAt | DateTime | default now |
-| updatedAt | DateTime | @updatedAt |
+| id | Int autoincrement | PK |
+| city | String | Required, trimmed, 1–120 chars |
+| country | String? | Optional, trimmed, ≤120 chars |
+| startDate | DateTime | Required (ISO at wire) |
+| endDate | DateTime | Required, **≥ startDate** (enforced in Zod + service layer, not DB) |
+| client | String? | Free-form, ≤200 chars (e.g. "Acme SpA") |
+| purpose | String? | Free-form, ≤500 chars |
+| notes | String? | Plain text for MVP (no markdown), ≤5000 chars |
+| createdAt | DateTime | `@default(now())` |
+| updatedAt | DateTime | `@updatedAt` |
 
-Indexes: `city`, `startDate`
+Indexes: `@@index([city])`, `@@index([startDate])`
+
+> Hard delete in S001. From S002 onward, Restaurant.tripId is `onDelete: SetNull` so deleting a trip preserves its restaurants as orphans.
 
 ### Restaurant
 | Column | Type | Notes |

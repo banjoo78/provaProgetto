@@ -38,3 +38,7 @@ coverage/
 .vscode/
 .idea/
 
+# TypeScript build info
+*.tsbuildinfo
+
+

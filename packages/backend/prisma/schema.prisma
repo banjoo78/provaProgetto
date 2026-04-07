@@ -1,0 +1,15 @@
+// Prisma schema for provaProgetto
+// Owned by /db-engineer. Models added per design docs in /docs/design/SXXX-*.md
+//
+// S001: Trip model — see docs/design/S001-trip-design.md §1
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/dev.db"
+}
+
+// TODO(S001): add Trip model here

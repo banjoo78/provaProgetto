@@ -65,6 +65,29 @@ provaProgetto is a **single-user, local-first web application**. Three layers, a
 - **No emails, no notifications.**
 - **No CI deploy step.** CI only typechecks, lints, and runs tests.
 
+## Frontend stack details (locked during S001 design)
+
+- **Router**: React Router v6 — standard, supports nested routes for `/trips/:id/restaurants/:rid` later.
+- **Server state / data fetching**: **TanStack Query v5** — caching, refetch on focus, automatic invalidation on mutations. Avoids reimplementing fetch boilerplate across 7 stories.
+- **Local UI state**: React `useState` / `useReducer` only.
+- **URL state**: React Router params + search params (used for filters in S006).
+- **No global client store** (no Redux/Zustand/Jotai). TanStack Query covers all server state needs.
+- **API client**: thin typed wrapper around `fetch` in `packages/web/src/lib/api.ts`. Throws a structured `ApiError` on non-2xx. TanStack Query mutations wrap it.
+
+## Backend conventions (locked during S001 design)
+
+- **Layering**: `routes/` are thin (parse → service → respond), `services/` own business logic over Prisma, `lib/` holds the Prisma singleton and error helpers.
+- **Validation**: Zod schemas live in `packages/shared/`, reused by backend (via `fastify-type-provider-zod`) and frontend.
+- **Errors**: canonical envelope `{ error: { code, message, details? } }`. Codes are uppercase snake_case. See [design/S001-trip-design.md](design/S001-trip-design.md) §4.
+- **Dates**: ISO 8601 strings at the wire boundary. Prisma `DateTime` ↔ JS `Date` internally.
+
+## ADRs
+
+1. **TanStack Query over plain fetch** (S001) — accepted ~13 KB cost for huge DX win across all 7 stories.
+2. **No DB-level CHECK constraint for endDate ≥ startDate** (S001) — SQLite + Prisma support is weak; enforced in Zod + service.
+3. **Hard delete for trips in S001** — soft delete deferred until a real need appears.
+4. **UI language: Italian** — single user is Italian; no i18n framework needed.
+
 ## Open questions
 
 _None yet — to be filled as architectural decisions are made._

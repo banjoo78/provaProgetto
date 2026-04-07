@@ -61,6 +61,16 @@ Copy both to backup. Or use the in-app **Export to JSON** button.
 - **Map shows blank tiles** — you're offline. MapLibre needs internet for OSM tiles.
 - **Geocoding returns nothing** — Nominatim rate limit. Wait a few seconds and retry.
 
+## Notes
+
+- `pnpm` is provided via Corepack. If you don't have it on your `PATH`, run once:
+  ```bash
+  mkdir -p ~/.local/bin
+  corepack enable --install-directory ~/.local/bin
+  export PATH="$HOME/.local/bin:$PATH"   # add this to ~/.zshrc to make it permanent
+  ```
+- Database migrations and the actual Trip routes ship with **S001**. Until then, `pnpm dev` boots a placeholder web app and a Fastify health check at <http://localhost:3000/health>.
+
 ## Status
 
-🚧 Most commands above will work after `/devops` scaffolds `package.json` and `pnpm-workspace.yaml` during the MVP.
+✅ Scaffolding complete (S001 in progress). All commands above resolve.

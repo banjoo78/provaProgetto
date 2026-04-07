@@ -9,54 +9,34 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-
-    # Uncomment and configure services as needed:
-    # services:
-    #   postgres:
-    #     image: postgres:16-alpine
-    #     env:
-    #       POSTGRES_USER: {{PROJECT_SLUG}}
-    #       POSTGRES_PASSWORD: {{PROJECT_SLUG}}_pass
-    #       POSTGRES_DB: {{PROJECT_SLUG}}
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 5432:5432
-    #   redis:
-    #     image: redis:7-alpine
-    #     options: >-
-    #       --health-cmd "redis-cli ping"
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 6379:6379
-
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm --filter @provaprogetto/backend db:generate
 
       - name: Typecheck
-        run: npx tsc --noEmit
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
 
       - name: Build
-        run: npm run build
-
-      # Uncomment if you have tests:
-      # - name: Test
-      #   run: npm test
-
-      # Uncomment if you have migrations:
-      # - name: Run migrations
-      #   run: npm run db:migrate
-      #   env:
-      #     DATABASE_URL: postgresql://{{PROJECT_SLUG}}:{{PROJECT_SLUG}}_pass@localhost:5432/{{PROJECT_SLUG}}
+        run: pnpm build
