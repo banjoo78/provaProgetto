@@ -8,3 +8,33 @@ node_modules/
 dist/
 build/
 .claude/memory-path.txt
+
+# pnpm
+.pnpm-store/
+
+# Vite
+.vite/
+*.local
+
+# Prisma / SQLite — local DB and uploads must NEVER be committed
+packages/backend/data/
+packages/backend/uploads/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Build outputs
+packages/*/dist/
+packages/*/build/
+packages/*/.next/
+packages/*/.turbo/
+
+# Test
+coverage/
+.nyc_output/
+
+# Editor
+.vscode/
+.idea/
+

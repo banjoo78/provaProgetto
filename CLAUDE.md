@@ -36,19 +36,116 @@ These rules MUST survive context compression. They are the Definition of Done fo
 
 ---
 
+## What This Project Is
+
+**provaProgetto** is a personal restaurant tracker — a single-user web app to keep track of restaurants the owner likes in cities visited for business trips. Pure local-first: backend + DB + frontend all run on the user's Mac. **No auth, no cloud, no deploy.**
+
+Core entities: **Trip** (city, dates, client/purpose) → **Restaurant** (name, address, geo, rating, notes, tags) → **Photos** (stored on local disk).
+
+Primary user actions: log a new trip, add restaurants visited during it, see them on a map, filter by tag/city/rating, export everything to JSON.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Monorepo | pnpm workspaces |
+| Language | TypeScript (everywhere) |
+| Backend | Fastify + Prisma ORM |
+| Database | SQLite (single file at `packages/backend/data/dev.db`) |
+| Frontend | Vite + React 18 + Tailwind CSS |
+| Maps | MapLibre GL JS + OpenStreetMap tiles (no API key) |
+| Geocoding | Nominatim (OSM, no API key, rate-limited) |
+| Photo storage | Local filesystem under `packages/backend/uploads/` |
+| Shared | `packages/shared/` exposes types consumed by backend + web |
+| Tests | Vitest (backend + web) |
+| Lint/format | ESLint + Prettier |
+
+**Single-user assumption is hard-coded.** No users table, no sessions, no JWT.
+
 ## Project Structure
 
-[TO BE FILLED: describe your project structure here]
+```
+provaProgetto/
+├── packages/
+│   ├── backend/         Fastify API + Prisma + SQLite + uploads
+│   ├── web/             Vite + React + Tailwind + MapLibre
+│   └── shared/          Shared TS types (Trip, Restaurant, Tag, …)
+├── docs/
+│   ├── architecture.md       High-level system design
+│   ├── tech-stack.md         Why each tech was chosen
+│   ├── functional-spec.md    Features and user flows
+│   ├── database-schema.md    Prisma schema documentation
+│   ├── api-reference.md      REST endpoints
+│   ├── setup-guide.md        How to run locally
+│   ├── user-guide.md         How to use the app
+│   ├── dev-process.md        Workflow, agents, DoD
+│   └── test-books/
+│       ├── TEMPLATE.md
+│       ├── E2E-complete-ui-testbook.md
+│       └── SXXX-*.md         Per-feature test books
+├── scripts/             orchestrator-guard, dod-reminder, sync-skills, backup-memory
+├── .claude/             settings.json (hooks), memory-path.txt
+├── .github/workflows/   CI (typecheck + build + tests)
+├── pnpm-workspace.yaml
+├── package.json         Root workspace + scripts
+└── CLAUDE.md            This file
+```
 
-Not specified
+## Key Files (target — most don't exist yet)
 
-## Key Files
-
-[TO BE FILLED: list key entry points and important files]
+- [packages/backend/src/server.ts](packages/backend/src/server.ts) — Fastify entry point
+- [packages/backend/prisma/schema.prisma](packages/backend/prisma/schema.prisma) — DB schema (Trip, Restaurant, Photo, Tag)
+- `packages/backend/data/dev.db` — SQLite database file (gitignored)
+- [packages/web/src/main.tsx](packages/web/src/main.tsx) — Vite/React entry
+- [packages/web/src/lib/api.ts](packages/web/src/lib/api.ts) — Typed API client
+- [packages/shared/src/index.ts](packages/shared/src/index.ts) — Shared types
+- [scripts/orchestrator-guard.sh](scripts/orchestrator-guard.sh) — Blocks orchestrator from committing code
 
 ## Commands
 
-[TO BE FILLED: common dev commands]
+All commands run from the repo root and use pnpm workspaces. Skill agents must wire `package.json` to honor exactly these commands.
+
+```bash
+pnpm install                       # Install everything
+
+pnpm dev                           # Backend + web in parallel
+pnpm --filter backend dev          # Fastify on http://localhost:3000
+pnpm --filter web dev              # Vite on http://localhost:5173
+
+pnpm --filter backend db:migrate   # Apply Prisma migrations
+pnpm --filter backend db:studio    # Open Prisma Studio
+pnpm --filter backend db:seed      # Seed sample data
+
+pnpm typecheck                     # tsc --noEmit across all packages
+pnpm lint                          # ESLint
+pnpm test                          # Vitest
+
+pnpm build                         # Build web + backend
+```
+
+## Team Composition
+
+**15 core agents**, no project-specific specialists. The app is too small to justify any.
+
+| Agent | Role in this project |
+|---|---|
+| /product-manager | Backlog & GitHub issues |
+| /software-architect | System design + **API contract design** (no separate /api-designer here) |
+| /backend-dev | Fastify, Prisma queries, business logic |
+| /db-engineer | Prisma schema, migrations, indexing |
+| /frontend-dev | Vite, React, Tailwind, MapLibre |
+| /ux-specialist | Layout, responsive, mobile-first review |
+| /devops | pnpm workspaces, scripts, CI — **no deploy** |
+| /security-auditor | Input validation, file-upload safety, path traversal on photos |
+| /qa-engineer | Test books, Vitest tests |
+| /code-reviewer | Pre-commit review |
+| /tech-lead | Validates findings, quality gate |
+| /debug-agent | Bug diagnosis |
+| /prompt-engineer | Maintains agent SKILL.md files |
+| /ai-architect | Only if memory/agent topics arise (rare here) |
+| /claude-architect | Only if CLAUDE.md/skills config audit needed |
+
+**Deliberately excluded** (no value for a personal local app): /payment-specialist, /auth-specialist, /gdpr-specialist, /performance-auditor, /accessibility-auditor, mobile/ML/search/notification/infra specialists.
 
 ## Skill Auto-Invocation
 
