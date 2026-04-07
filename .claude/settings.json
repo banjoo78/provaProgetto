@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hook": "bash {{PROJECT_DIR}}/scripts/orchestrator-guard.sh"
+      },
+      {
+        "matcher": "Bash",
+        "hook": "bash {{PROJECT_DIR}}/scripts/dod-reminder.sh"
+      }
+    ]
+  }
+}
