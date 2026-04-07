@@ -41,4 +41,8 @@ coverage/
 # TypeScript build info
 *.tsbuildinfo
 
+# Vite tsc -b artifacts (built from .ts source, never committed)
+packages/web/vite.config.js
+packages/web/vite.config.d.ts
+
 

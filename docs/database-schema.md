@@ -8,7 +8,7 @@ SQLite — single file at `packages/backend/data/dev.db`. Backed by Prisma.
 
 ## Target schema (to be implemented during MVP)
 
-### Trip — **LOCKED for S001** (see [design/S001-trip-design.md](design/S001-trip-design.md))
+### Trip — **APPLIED in S001** (migration `20260407104526_init_trip`, see [design/S001-trip-design.md](design/S001-trip-design.md))
 | Column | Type | Notes |
 |---|---|---|
 | id | Int autoincrement | PK |

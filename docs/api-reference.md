@@ -15,7 +15,7 @@ All responses are JSON unless noted. All bodies are JSON unless noted (photo upl
 
 ## Target endpoints (to be implemented during MVP)
 
-### Trips — **LOCKED for S001** (full contract in [design/S001-trip-design.md](design/S001-trip-design.md))
+### Trips — **IMPLEMENTED in S001** (full contract in [design/S001-trip-design.md](design/S001-trip-design.md))
 
 | Method | Path | Body | Success | Errors |
 |---|---|---|---|---|
@@ -54,4 +54,4 @@ All inputs validated with **Zod schemas** defined in `packages/shared/` and reus
 
 ## Status
 
-🚧 Not implemented yet — this is the contract `/software-architect` + `/backend-dev` will honor.
+S001 (Trips) implemented. Restaurants, Photos, Tags, Geocoding, Export still pending.

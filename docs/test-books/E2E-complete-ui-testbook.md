@@ -17,7 +17,16 @@ Every user-facing flow in the app, end-to-end, executed manually or via Playwrig
 
 | ID | Area | Description | Status |
 |---|---|---|---|
-| _none yet_ | _MVP not started_ | _Will populate as features ship_ | — |
+| E01 | Trips | Empty state: visit `/` with no trips → see "Nessun viaggio ancora" + CTA button | ☐ |
+| E02 | Trips | Create a trip via `/trips/new` → after submit, redirected to `/trips/:id`, card visible in list | ☐ |
+| E03 | Trips | Open a trip from the list → all fields render correctly with `dd/MM/yyyy` dates | ☐ |
+| E04 | Trips | Edit a trip via `/trips/:id/edit` → changes persist, list reflects update | ☐ |
+| E05 | Trips | Delete a trip → confirm dialog appears, after confirming, redirected to list, card removed | ☐ |
+| E06 | Trips | Cancel delete → dialog closes via "Annulla" button, Escape key, and backdrop click; trip still present | ☐ |
+| E07 | Trips | Form validation: empty `city` → inline error, no API call | ☐ |
+| E08 | Trips | Form validation: `endDate` < `startDate` → inline error on endDate field | ☐ |
+| E09 | Trips | "In corso" badge shows on a trip whose `[startDate, endDate]` contains today (in list and detail) | ☐ |
+| E10 | Trips | Mobile viewport (390px): list cards stack to single column, form is fully usable | ☐ |
 
 ### Template row
 
